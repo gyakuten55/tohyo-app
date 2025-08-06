@@ -33,11 +33,11 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onRefresh }) =
   // Form state
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
-  const [color, setColor] = useState('#6750a4');
+  const [color, setColor] = useState('#004225');
   
   const colors = [
-    '#6750a4', '#2196F3', '#4CAF50', '#FF9800', 
-    '#F44336', '#E91E63', '#9C27B0', '#00BCD4',
+    '#004225', '#2196F3', '#4CAF50', '#FF9800', 
+    '#F44336', '#E91E63', '#800000', '#00BCD4',
     '#009688', '#8BC34A', '#FFC107', '#795548'
   ];
 
@@ -56,7 +56,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onRefresh }) =
               id: '1',
               name: '全て',
               slug: 'all',
-              color: '#6750a4',
+              color: '#004225',
               order_index: 0,
               is_active: true,
               created_at: new Date().toISOString(),
@@ -128,7 +128,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({ onRefresh }) =
   const resetForm = () => {
     setName('');
     setSlug('');
-    setColor('#6750a4');
+    setColor('#004225');
     setEditing(null);
   };
 
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
   colorDot: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: 0,
     marginRight: 12,
   },
   categoryName: {
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#6750a4',
+    backgroundColor: '#004225',
   },
   dialog: {
     maxWidth: 500,
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
   colorOption: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 0,
     margin: 4,
   },
   colorSelected: {

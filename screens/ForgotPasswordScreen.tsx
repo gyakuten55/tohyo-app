@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#6750a4',
+    color: '#004225',
     fontSize: 14,
   },
 });

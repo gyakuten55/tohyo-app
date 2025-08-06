@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 4,
+    borderRadius: 0,
     paddingHorizontal: 12,
     marginBottom: 10,
     backgroundColor: '#fff',
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   loginLink: {
-    color: '#6750a4',
+    color: '#004225',
     fontWeight: 'bold',
   },
 });

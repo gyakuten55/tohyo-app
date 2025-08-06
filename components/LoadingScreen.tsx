@@ -5,7 +5,7 @@ import { ActivityIndicator, Text } from 'react-native-paper';
 export const LoadingScreen: React.FC = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#6750a4" />
+      <ActivityIndicator size="large" color="#004225" />
       <Text style={styles.text}>読み込み中...</Text>
     </View>
   );

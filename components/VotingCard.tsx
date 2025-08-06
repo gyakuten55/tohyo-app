@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   choiceButton: {
     backgroundColor: COLORS.VOTE_CARD,
-    borderRadius: 8,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: COLORS.DIVIDER,
     padding: 16,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   thankYouContainer: {
     backgroundColor: COLORS.SUCCESS_LIGHT,
-    borderRadius: 8,
+    borderRadius: 0,
     padding: 16,
     marginTop: 16,
     alignItems: 'center',

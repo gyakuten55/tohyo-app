@@ -1,52 +1,59 @@
-// App色定数
+// WBC Comic Book Style Theme
 export const COLORS = {
-  // プライマリカラー
-  PRIMARY: '#6750a4',
-  PRIMARY_LIGHT: '#f8f5ff',
+  // プライマリカラー - WBC ディープブルー
+  PRIMARY: '#001e42',        // WBC ネイビーブルー
+  PRIMARY_LIGHT: '#e8f0ff',  // 薄いブルー
   
-  // セカンダリカラー  
-  SECONDARY: '#6200ee',
+  // セカンダリカラー - WBC レッド
+  SECONDARY: '#c8102e',      // WBC クラシックレッド
   
-  // バックグラウンド
-  BACKGROUND: '#f5f5f5',
+  // バックグラウンド - コミックペーパー風
+  BACKGROUND: '#faf8f5',     // クリームホワイト（コミック紙）
   BACKGROUND_WHITE: '#ffffff',
   
-  // テキスト
-  TEXT_PRIMARY: '#333333',
-  TEXT_SECONDARY: '#666666',
-  TEXT_LIGHT: '#999999',
+  // テキスト - コミックインク
+  TEXT_PRIMARY: '#0a0a0a',   // コミックブラック
+  TEXT_SECONDARY: '#3a3a3a', // ダークグレー
+  TEXT_LIGHT: '#6a6a6a',     // ミディアムグレー
   TEXT_WHITE: '#ffffff',
   
-  // ステータスカラー
-  SUCCESS: '#4caf50',
-  SUCCESS_LIGHT: '#e8f5e8',
-  ERROR: '#d32f2f',
-  WARNING: '#ff9800',
+  // ステータスカラー - WBCテーマ
+  SUCCESS: '#00843d',        // WBC グリーン（勝利）
+  SUCCESS_LIGHT: '#e6ffe6',
+  ERROR: '#c8102e',          // WBC レッド（エラー）
+  WARNING: '#ffb81c',        // WBC ゴールド（警告）
   
-  // カテゴリカラー
-  CATEGORY_BLUE: '#2196F3',
-  CATEGORY_GREEN: '#4CAF50',
-  CATEGORY_ORANGE: '#FF9800',
-  CATEGORY_RED: '#F44336',
-  CATEGORY_PINK: '#E91E63',
-  CATEGORY_PURPLE: '#9C27B0',
-  CATEGORY_CYAN: '#00BCD4',
+  // チームカラー（カテゴリ用）- WBCナショナルチームカラー
+  CATEGORY_BLUE: '#003da5',    // USA ブルー
+  CATEGORY_GREEN: '#00843d',   // メキシコ グリーン
+  CATEGORY_ORANGE: '#ff6900',  // オランダ オレンジ
+  CATEGORY_RED: '#c8102e',     // カナダ レッド
+  CATEGORY_NAVY: '#001e42',    // 日本 ネイビー
+  CATEGORY_GOLD: '#ffb81c',    // ゴールド
+  CATEGORY_MAROON: '#7a003c',  // ベネズエラ マルーン
   
-  // ボーダー・ディバイダー
-  BORDER_LIGHT: '#e0e0e0',
-  BORDER_LIGHTER: '#f0f0f0',
-  DIVIDER: '#e9ecef',
+  // ボーダー・ディバイダー - コミックライン風
+  BORDER_LIGHT: '#d0d0d0',     // コミックペンシルライン
+  BORDER_LIGHTER: '#e8e8e8',   // より薄いライン
+  DIVIDER: '#b0b0b0',          // コミックディバイダー
   
-  // シャドウ
-  SHADOW: '#000000',
+  // シャドウ - コミックシャドウ
+  SHADOW: '#1a1a1a',
+  SHADOW_COMIC: '#001e42',     // コミックブルーシャドウ
+  SHADOW_RED: '#c8102e',       // レッドアクセントシャドウ
   
-  // 投票・ポイント関連
-  VOTE_CARD: '#f8f9fa',
-  POINTS_GREEN: '#2e7d32',
+  // 投票・スコア関連 - WBCスコアボード風
+  VOTE_CARD: '#f5f5f0',        // スコアボード背景
+  POINTS_GREEN: '#00843d',     // WBC 得点グリーン
   
-  // ポイント履歴カラー
-  POINTS_VOTE: '#e3f2fd',
-  POINTS_BONUS: '#f3e5f5',
-  POINTS_DAILY: '#e8f5e8',
-  POINTS_REFERRAL: '#fff3e0',
+  // ポイント履歴カラー - WBC統計風
+  POINTS_VOTE: '#e6f0ff',      // 投票統計（WBCライトブルー）
+  POINTS_BONUS: '#ffe6ec',     // ボーナス（ライトレッド）
+  POINTS_DAILY: '#e6f5e6',     // 日次ポイント（ライトグリーン）
+  POINTS_REFERRAL: '#fff5e6',  // 紹介ポイント（ライトゴールド）
+  
+  // コミックスタイル用追加カラー
+  COMIC_HIGHLIGHT: '#fff9e6',  // コミックハイライト
+  COMIC_ACCENT: '#ffb81c',     // コミックアクセント（ゴールド）
+  COMIC_PANEL_BG: '#fffcf8',   // コミックパネル背景
 } as const;

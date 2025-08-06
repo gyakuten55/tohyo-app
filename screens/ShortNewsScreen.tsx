@@ -12,6 +12,7 @@ import {
 import { Card, ActivityIndicator } from 'react-native-paper';
 import { supabase } from '../lib/supabase';
 import { ShortNews, Category } from '../types';
+import { COLORS } from '../constants/colors';
 
 export const ShortNewsScreen: React.FC = () => {
   const [news, setNews] = useState<ShortNews[]>([]);
@@ -36,7 +37,7 @@ export const ShortNewsScreen: React.FC = () => {
             id: 'all',
             name: '全て',
             slug: 'all',
-            color: '#6750a4',
+            color: '#004225',
             order_index: 0,
             is_active: true,
             created_at: new Date().toISOString(),
@@ -76,7 +77,7 @@ export const ShortNewsScreen: React.FC = () => {
           id: 'all',
           name: '全て',
           slug: 'all',
-          color: '#6750a4',
+          color: '#004225',
           order_index: -1,
           is_active: true,
           created_at: new Date().toISOString(),
@@ -112,32 +113,42 @@ export const ShortNewsScreen: React.FC = () => {
           const sampleNews: ShortNews[] = [
             {
               id: '1',
-              title: '新機能リリースのお知らせ',
-              summary: 'アプリに新しい投票機能が追加されました。より使いやすくなった投票システムをぜひお試しください。',
+              title: '大谷翔平選手、今季50本塁打達成！',
+              summary: 'エンゼルスの大谷翔平選手が今季50本目のホームランを放ち、投打二刀流として驚異的な成績を記録しています。ファンからは「MVP確実」との声も。',
               created_at: new Date().toISOString(),
               created_by: {
                 id: '1',
-                nickname: 'システム管理者'
+                nickname: 'スポーツ編集部'
               }
             },
             {
               id: '2',
-              title: 'メンテナンス予定',
-              summary: '明日午前2時から4時まで、システムメンテナンスを実施します。この間、サービスがご利用いただけません。',
+              title: 'WBC2024開催決定、日本代表監督は？',
+              summary: '次回のワールド・ベースボール・クラシック開催が正式決定。日本代表の監督人事に注目が集まっており、複数の有力候補が浮上している。',
               created_at: new Date(Date.now() - 86400000).toISOString(),
               created_by: {
-                id: '1',
-                nickname: 'システム管理者'
+                id: '2',
+                nickname: '野球専門記者'
               }
             },
             {
               id: '3',
-              title: '投票ランキング更新',
-              summary: '今週の投票ランキングが更新されました。トップユーザーには特別ボーナスが付与されます。',
+              title: 'メジャーリーグ、日本人選手の活躍続々',
+              summary: 'ダルビッシュ有投手の好投、近藤健介選手の適時打など、メジャーで活躍する日本人選手たちのニュースが連日話題となっています。',
               created_at: new Date(Date.now() - 172800000).toISOString(),
               created_by: {
-                id: '1',
-                nickname: 'システム管理者'
+                id: '3',
+                nickname: 'MLB担当'
+              }
+            },
+            {
+              id: '4',
+              title: 'プロ野球オフシーズン、大型トレード予想',
+              summary: 'NPBのオフシーズンが本格化し、各球団の補強ポイントが明確に。大型トレードの可能性や注目のFA選手についてまとめました。',
+              created_at: new Date(Date.now() - 259200000).toISOString(),
+              created_by: {
+                id: '4',
+                nickname: 'プロ野球担当'
               }
             }
           ];
@@ -222,7 +233,7 @@ export const ShortNewsScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#6200ee" />
+          <ActivityIndicator size="large" color={COLORS.SECONDARY} />
           <Text style={styles.loadingText}>読み込み中...</Text>
         </SafeAreaView>
       </View>
@@ -276,8 +287,8 @@ export const ShortNewsScreen: React.FC = () => {
               <RefreshControl 
                 refreshing={refreshing} 
                 onRefresh={onRefresh}
-                colors={['#6200ee']}
-                tintColor={'#6200ee'}
+                colors={[COLORS.SECONDARY]}
+                tintColor={COLORS.SECONDARY}
               />
             }
             contentContainerStyle={styles.listContainer}
@@ -292,37 +303,58 @@ export const ShortNewsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.BACKGROUND,
   },
   safeArea: {
     flex: 1,
   },
   categoryContainer: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    backgroundColor: COLORS.COMIC_PANEL_BG,
+    paddingVertical: 14,
+    borderBottomWidth: 3,
+    borderBottomColor: COLORS.PRIMARY,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 4,
   },
   categoryScroll: {
     paddingHorizontal: 16,
   },
   categoryChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    borderWidth: 1,
-    backgroundColor: '#fff',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 0,
+    marginRight: 10,
+    borderWidth: 2,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    transform: [{ skewX: '-5deg' }],
+    shadowColor: COLORS.SHADOW,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
   },
   categoryChipSelected: {
-    backgroundColor: '#6750a4',
+    backgroundColor: COLORS.PRIMARY,
+    borderColor: COLORS.SECONDARY,
+    shadowColor: COLORS.SHADOW_RED,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
   },
   categoryText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    transform: [{ skewX: '5deg' }],
   },
   categoryTextSelected: {
-    color: '#fff',
+    color: COLORS.TEXT_WHITE,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   loadingContainer: {
     flex: 1,
@@ -332,7 +364,10 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   centered: {
     flex: 1,
@@ -341,51 +376,74 @@ const styles = StyleSheet.create({
     padding: 32,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   emptySubText: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
+    fontWeight: '500',
   },
   listContainer: {
     paddingVertical: 8,
   },
   newsCard: {
     marginHorizontal: 16,
-    marginVertical: 6,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.18,
-    shadowRadius: 1.0,
+    marginVertical: 10,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '0.5deg' }],
   },
   newsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 10,
+    paddingBottom: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.COMIC_ACCENT,
   },
   newsTitle: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 17,
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     marginRight: 12,
-    lineHeight: 22,
+    lineHeight: 24,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    textShadowColor: COLORS.COMIC_ACCENT,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   newsDate: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.SECONDARY,
     flexShrink: 0,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   newsSummary: {
     fontSize: 14,
-    color: '#555',
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: 12,
-    lineHeight: 20,
+    lineHeight: 22,
+    fontWeight: '500',
   },
 });

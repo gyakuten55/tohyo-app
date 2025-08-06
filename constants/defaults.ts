@@ -6,7 +6,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
     id: 'all',
     name: '全て',
     slug: 'all',
-    color: '#6750a4',
+    color: '#004225',
     order_index: 0,
     is_active: true,
     created_at: new Date().toISOString(),
@@ -15,7 +15,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
     id: '1',
     name: '政治',
     slug: 'politics',
-    color: '#2196F3',
+    color: '#1e3a8a',
     order_index: 1,
     is_active: true,
     created_at: new Date().toISOString(),
@@ -24,7 +24,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
     id: '2',
     name: '経済',
     slug: 'economy',
-    color: '#4CAF50',
+    color: '#228b22',
     order_index: 2,
     is_active: true,
     created_at: new Date().toISOString(),
@@ -33,18 +33,18 @@ export const DEFAULT_CATEGORIES: Category[] = [
     id: '3',
     name: 'スポーツ',
     slug: 'sports',
-    color: '#FF9800',
+    color: '#ff6900',
     order_index: 3,
     is_active: true,
     created_at: new Date().toISOString(),
   },
 ];
 
-// カテゴリカラーパレット
+// カテゴリカラーパレット - スポーツチームカラー
 export const CATEGORY_COLORS = [
-  '#6750a4', '#2196F3', '#4CAF50', '#FF9800',
-  '#F44336', '#E91E63', '#9C27B0', '#00BCD4',
-  '#795548', '#607D8B', '#8BC34A', '#CDDC39',
+  '#004225', '#1e3a8a', '#228b22', '#ff6900',
+  '#dc143c', '#1a1a2e', '#ffd700', '#800000',
+  '#8b4513', '#2f4f4f', '#556b2f', '#d2691e',
 ];
 
 // アプリ設定のデフォルト値

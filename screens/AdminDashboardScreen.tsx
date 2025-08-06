@@ -25,6 +25,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { CategoryManager } from '../components/CategoryManager';
 import { Article, ShortNews, Category } from '../types';
+import { COLORS } from '../constants/colors';
 
 export const AdminDashboardScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'articles' | 'shortnews' | 'categories'>('articles');
@@ -640,16 +641,22 @@ export const AdminDashboardScreen: React.FC = () => {
               value: 'articles',
               label: '応援記事',
               icon: 'vote',
+              style: { borderRadius: 0 },
+              labelStyle: { fontWeight: '700', textTransform: 'uppercase' },
             },
             {
               value: 'shortnews',
-              label: 'ショートニュース',
+              label: 'ショートニュース', 
               icon: 'newspaper',
+              style: { borderRadius: 0 },
+              labelStyle: { fontWeight: '700', textTransform: 'uppercase' },
             },
             {
               value: 'categories',
               label: 'カテゴリ',
               icon: 'folder',
+              style: { borderRadius: 0 },
+              labelStyle: { fontWeight: '700', textTransform: 'uppercase' },
             },
           ]}
           style={styles.segmentedButtons}
@@ -699,6 +706,8 @@ export const AdminDashboardScreen: React.FC = () => {
           icon="plus"
           onPress={() => setShowCreateDialog(true)}
           label={activeTab === 'articles' ? '記事作成' : 'ニュース作成'}
+          color={COLORS.TEXT_WHITE}
+          labelStyle={{ color: COLORS.TEXT_WHITE, fontWeight: '700' }}
         />
       )}
 
@@ -972,7 +981,7 @@ export const AdminDashboardScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.BACKGROUND,
   },
   centered: {
     flex: 1,
@@ -980,17 +989,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.COMIC_PANEL_BG,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    paddingVertical: 14,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    borderBottomWidth: 3,
+    borderBottomColor: COLORS.PRIMARY,
   },
   segmentedButtons: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.BACKGROUND,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    overflow: 'hidden',
   },
   listContainer: {
     padding: 16,
@@ -1003,24 +1018,35 @@ const styles = StyleSheet.create({
     paddingVertical: 48,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   emptySubText: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
     paddingHorizontal: 32,
+    fontWeight: '500',
   },
   articleCard: {
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    marginBottom: 20,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.3deg' }],
   },
   articleHeader: {
     flexDirection: 'row',
@@ -1030,31 +1056,54 @@ const styles = StyleSheet.create({
   },
   articleTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     flex: 1,
     marginRight: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    textShadowColor: COLORS.COMIC_ACCENT,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   statusChip: {
-    height: 28,
+    height: 30,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ skewX: '-5deg' }],
   },
   statusChipText: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    transform: [{ skewX: '5deg' }],
   },
   articleContent: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
     marginBottom: 12,
     lineHeight: 20,
+    fontWeight: '500',
   },
   choicesRow: {
     marginBottom: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: COLORS.COMIC_HIGHLIGHT,
+    borderWidth: 2,
+    borderColor: COLORS.PRIMARY,
+    borderRadius: 0,
+    transform: [{ skewX: '-2deg' }],
   },
   choiceText: {
-    fontSize: 12,
-    color: '#333',
-    marginBottom: 2,
+    fontSize: 13,
+    color: COLORS.PRIMARY,
+    marginBottom: 4,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   articleActions: {
     flexDirection: 'row',
@@ -1085,7 +1134,15 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: '#6750a4',
+    backgroundColor: COLORS.PRIMARY,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-2deg' }],
+    shadowColor: COLORS.SHADOW_RED,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
   },
   dialog: {
     maxHeight: '95%',
@@ -1149,9 +1206,11 @@ const styles = StyleSheet.create({
   },
   choiceLabel: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#6750a4',
+    fontWeight: '700',
+    color: COLORS.PRIMARY,
     marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   choiceInput: {
     marginBottom: 4,
@@ -1163,11 +1222,11 @@ const styles = StyleSheet.create({
   vsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#6750a4',
+    color: '#004225',
     backgroundColor: '#f0f0f0',
     paddingHorizontal: 16,
     paddingVertical: 4,
-    borderRadius: 20,
+    borderRadius: 0,
   },
   radioCard: {
     flexDirection: 'row',
@@ -1175,12 +1234,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 0,
     marginBottom: 8,
     backgroundColor: '#fff',
   },
   radioCardSelected: {
-    borderColor: '#6750a4',
+    borderColor: '#004225',
     backgroundColor: '#f8f5ff',
   },
   radioContent: {
@@ -1205,7 +1264,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   createButton: {
-    backgroundColor: '#6750a4',
+    backgroundColor: '#004225',
   },
   updateButton: {
     backgroundColor: '#2e7d32',

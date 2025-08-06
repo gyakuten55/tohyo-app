@@ -42,11 +42,20 @@ const HomeStack = () => {
         options={{
           title: '応援',
           headerStyle: {
-            backgroundColor: '#6750a4',
+            backgroundColor: '#001e42',
+            shadowColor: '#c8102e',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 6,
+            elevation: 8,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontSize: 20,
+            textShadowColor: '#000',
+            textShadowOffset: { width: 2, height: 2 },
+            textShadowRadius: 3,
           },
         }}
       />
@@ -56,7 +65,7 @@ const HomeStack = () => {
         options={{
           title: '記事詳細',
           headerStyle: {
-            backgroundColor: '#6750a4',
+            backgroundColor: '#001e42',
           },
           headerTintColor: '#fff',
         }}
@@ -75,11 +84,20 @@ const ShortNewsStack = () => {
         options={{
           title: 'ショートニュース',
           headerStyle: {
-            backgroundColor: '#6750a4',
+            backgroundColor: '#001e42',
+            shadowColor: '#c8102e',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 6,
+            elevation: 8,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontSize: 20,
+            textShadowColor: '#000',
+            textShadowOffset: { width: 2, height: 2 },
+            textShadowRadius: 3,
           },
         }}
       />
@@ -97,11 +115,20 @@ const ProfileStack = () => {
         options={{
           title: 'アカウント',
           headerStyle: {
-            backgroundColor: '#6750a4',
+            backgroundColor: '#001e42',
+            shadowColor: '#c8102e',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 6,
+            elevation: 8,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontSize: 20,
+            textShadowColor: '#000',
+            textShadowOffset: { width: 2, height: 2 },
+            textShadowRadius: 3,
           },
         }}
       />
@@ -119,11 +146,20 @@ const AdminStack = () => {
         options={{
           title: '管理画面',
           headerStyle: {
-            backgroundColor: '#6750a4',
+            backgroundColor: '#001e42',
+            shadowColor: '#c8102e',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 6,
+            elevation: 8,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontSize: 20,
+            textShadowColor: '#000',
+            textShadowOffset: { width: 2, height: 2 },
+            textShadowRadius: 3,
           },
         }}
       />
@@ -140,7 +176,7 @@ const MainTabs = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#6750a4',
+        tabBarActiveTintColor: '#001e42',
         tabBarInactiveTintColor: 'gray',
       }}
     >

@@ -13,6 +13,7 @@ import { Card, Avatar, Button, TextInput, Divider, Chip } from 'react-native-pap
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { PointHistory } from '../types';
+import { COLORS } from '../constants/colors';
 
 export const ProfileScreen: React.FC = () => {
   const { user, profile, signOut, refreshProfile } = useAuth();
@@ -199,15 +200,15 @@ export const ProfileScreen: React.FC = () => {
   const getSourceColor = (source: string) => {
     switch (source) {
       case 'vote':
-        return '#e3f2fd';
+        return COLORS.POINTS_VOTE;
       case 'bonus':
-        return '#f3e5f5';
+        return COLORS.POINTS_BONUS;
       case 'daily':
-        return '#e8f5e8';
+        return COLORS.POINTS_DAILY;
       case 'referral':
-        return '#fff3e0';
+        return COLORS.POINTS_REFERRAL;
       default:
-        return '#f5f5f5';
+        return COLORS.BACKGROUND;
     }
   };
 
@@ -530,7 +531,7 @@ export const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.BACKGROUND,
   },
   centered: {
     flex: 1,
@@ -539,19 +540,26 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     margin: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.3deg' }],
   },
   profileContent: {
     alignItems: 'center',
     paddingVertical: 20,
   },
   avatar: {
-    backgroundColor: '#6750a4',
+    backgroundColor: COLORS.PRIMARY,
     marginBottom: 16,
+    borderWidth: 3,
+    borderColor: COLORS.SECONDARY,
   },
   editContainer: {
     width: '100%',
@@ -576,36 +584,55 @@ const styles = StyleSheet.create({
   nickname: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: 4,
   },
   email: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
     marginBottom: 12,
+    fontWeight: '500',
   },
   editLink: {
-    paddingVertical: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.COMIC_HIGHLIGHT,
+    borderWidth: 2,
+    borderColor: COLORS.PRIMARY,
+    transform: [{ skewX: '-5deg' }],
   },
   editLinkText: {
     fontSize: 14,
-    color: '#6750a4',
-    textDecorationLine: 'underline',
+    color: COLORS.PRIMARY,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    transform: [{ skewX: '5deg' }],
   },
   statsCard: {
     margin: 16,
     marginTop: 0,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '0.3deg' }],
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '900',
+    color: COLORS.PRIMARY,
     marginBottom: 16,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   statRow: {
     flexDirection: 'row',
@@ -615,31 +642,47 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
+    fontWeight: '600',
   },
   statValue: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#666',
+    fontWeight: '700',
+    color: COLORS.SECONDARY,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   adminText: {
-    color: '#6750a4',
-    fontWeight: 'bold',
+    color: COLORS.COMIC_ACCENT,
+    fontWeight: '900',
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   divider: {
     marginVertical: 8,
+    backgroundColor: COLORS.DIVIDER,
+    height: 2,
   },
   actionsCard: {
     margin: 16,
     marginTop: 0,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_RED,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.2deg' }],
   },
   signOutButton: {
-    borderColor: '#d32f2f',
+    borderColor: COLORS.SECONDARY,
+    borderWidth: 2,
+    borderRadius: 0,
+    transform: [{ skewX: '-3deg' }],
   },
   footer: {
     alignItems: 'center',
@@ -647,16 +690,24 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#999',
+    color: COLORS.TEXT_LIGHT,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   historyCard: {
     margin: 16,
     marginTop: 0,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '0.4deg' }],
   },
   historyHeader: {
     flexDirection: 'row',
@@ -669,13 +720,15 @@ const styles = StyleSheet.create({
   },
   noHistoryText: {
     textAlign: 'center',
-    color: '#666',
-    fontStyle: 'italic',
+    color: COLORS.TEXT_SECONDARY,
+    fontWeight: '600',
     paddingVertical: 16,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   historyItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.BORDER_LIGHT,
     paddingVertical: 12,
   },
   historyItemHeader: {
@@ -685,75 +738,113 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   sourceChip: {
-    height: 28,
+    height: 30,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ skewX: '-5deg' }],
   },
   sourceChipText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    transform: [{ skewX: '5deg' }],
   },
   pointsText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#4caf50',
+    fontSize: 18,
+    fontWeight: '900',
+    color: COLORS.SUCCESS,
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   articleTitle: {
     fontSize: 14,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     marginTop: 4,
     marginBottom: 2,
+    fontWeight: '500',
   },
   historyDate: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
+    fontWeight: '600',
+    textTransform: 'uppercase',
   },
   rankText: {
-    color: '#6750a4',
-    fontWeight: 'bold',
+    color: COLORS.COMIC_ACCENT,
+    fontWeight: '900',
+    fontSize: 18,
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   referralCard: {
     margin: 16,
     marginTop: 0,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    backgroundColor: '#f8f5ff',
-    borderWidth: 1,
-    borderColor: '#6750a4',
+    elevation: 6,
+    shadowColor: COLORS.COMIC_ACCENT,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.COMIC_HIGHLIGHT,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.5deg' }],
   },
   referralDescription: {
     fontSize: 14,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: 8,
     textAlign: 'center',
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
   referralBonus: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     textAlign: 'center',
     marginBottom: 16,
+    fontWeight: '700',
   },
   bonusPoints: {
-    color: '#6750a4',
-    fontWeight: 'bold',
-    fontSize: 18,
+    color: COLORS.SECONDARY,
+    fontWeight: '900',
+    fontSize: 20,
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   shareButton: {
-    backgroundColor: '#6750a4',
+    backgroundColor: COLORS.PRIMARY,
     marginTop: 8,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ skewX: '-3deg' }],
+    shadowColor: COLORS.SHADOW_RED,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
   },
   shareButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.TEXT_LIGHT,
+    borderColor: COLORS.BORDER_LIGHT,
   },
   referralLimit: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
     marginBottom: 16,
+    fontWeight: '600',
   },
   limitText: {
-    color: '#6750a4',
-    fontWeight: 'bold',
+    color: COLORS.SECONDARY,
+    fontWeight: '900',
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 0.5, height: 0.5 },
+    textShadowRadius: 0,
   },
 });

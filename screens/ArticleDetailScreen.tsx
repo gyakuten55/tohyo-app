@@ -7,8 +7,10 @@ import {
   Alert,
   Image,
   SafeAreaView,
+  TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, TextInput, Card, Chip, Avatar, IconButton } from 'react-native-paper';
 import { useAuth } from '../contexts/AuthContext';
 import { useArticles } from '../hooks/useArticles';
 import { useComments } from '../hooks/useComments';
@@ -29,8 +31,9 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
 }) => {
   const { articleId } = route.params;
   const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const { fetchArticleById } = useArticles(false);
   const { vote, voting } = useVoting();
@@ -46,6 +49,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
 
   const loadArticle = async () => {
     try {
+      setLoading(true);
       const fetchedArticle = await fetchArticleById(articleId);
       if (!fetchedArticle) {
         Alert.alert('エラー', '記事が見つかりません。');
@@ -57,6 +61,8 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
       console.error('Error fetching article:', error);
       Alert.alert('エラー', '記事の読み込みに失敗しました。');
       navigation.goBack();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,7 +148,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#6200ee" />
+          <ActivityIndicator size="large" color={COLORS.SECONDARY} />
           <Text style={styles.loadingText}>読み込み中...</Text>
         </SafeAreaView>
       </View>
@@ -275,6 +281,9 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
                     loading={submittingComment}
                     disabled={submittingComment || !newComment.trim()}
                     style={styles.commentSubmitButton}
+                    buttonColor={COLORS.PRIMARY}
+                    textColor={COLORS.TEXT_WHITE}
+                    labelStyle={{ fontWeight: '700', color: COLORS.TEXT_WHITE }}
                   >
                     投稿
                   </Button>
@@ -282,7 +291,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
               )}
 
               {loadingComments ? (
-                <ActivityIndicator size="small" color="#6200ee" style={styles.commentsLoader} />
+                <ActivityIndicator size="small" color={COLORS.SECONDARY} style={styles.commentsLoader} />
               ) : comments.length === 0 ? (
                 <Text style={styles.noCommentsText}>
                   まだコメントがありません。最初のコメントを投稿しましょう！
@@ -307,7 +316,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.BACKGROUND,
   },
   safeArea: {
     flex: 1,
@@ -323,22 +332,30 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   articleCard: {
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 8,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.3deg' }],
   },
   thumbnail: {
     width: '100%',
     height: 200,
-    borderRadius: 8,
+    borderRadius: 0,
     marginBottom: 16,
   },
   header: {
@@ -349,69 +366,107 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 26,
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     marginRight: 12,
-    lineHeight: 30,
+    lineHeight: 32,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    textShadowColor: COLORS.COMIC_ACCENT,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   votedChip: {
-    backgroundColor: '#e8f5e8',
+    backgroundColor: COLORS.SUCCESS_LIGHT,
+    borderWidth: 2,
+    borderColor: COLORS.SUCCESS,
+    borderRadius: 0,
+    transform: [{ skewX: '-5deg' }],
   },
   votedChipText: {
-    color: '#2e7d32',
+    color: COLORS.SUCCESS,
     fontSize: 12,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    transform: [{ skewX: '5deg' }],
   },
   dateText: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.SECONDARY,
     marginBottom: 16,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   content: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     lineHeight: 24,
     marginBottom: 8,
+    fontWeight: '500',
   },
   votingCard: {
     marginHorizontal: 16,
-    marginVertical: 8,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    marginVertical: 10,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '0.3deg' }],
   },
   votingTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 22,
+    fontWeight: '900',
+    color: COLORS.PRIMARY,
     textAlign: 'center',
     marginBottom: 20,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   choicesContainer: {
     gap: 12,
   },
   choiceButton: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
+    backgroundColor: COLORS.COMIC_HIGHLIGHT,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
     padding: 16,
+    transform: [{ skewX: '-2deg' }],
+    shadowColor: COLORS.SHADOW,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
   },
   choiceButtonVoted: {
-    backgroundColor: '#e8f5e8',
-    borderColor: '#2e7d32',
+    backgroundColor: COLORS.SUCCESS_LIGHT,
+    borderColor: COLORS.SUCCESS,
+    shadowColor: COLORS.SUCCESS,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
   },
   choiceButtonDisabled: {
     opacity: 0.6,
   },
   choiceText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 17,
+    fontWeight: '800',
+    color: COLORS.PRIMARY,
     marginBottom: 8,
     textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   voteInfo: {
     flexDirection: 'row',
@@ -420,53 +475,74 @@ const styles = StyleSheet.create({
   },
   voteCount: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.TEXT_SECONDARY,
+    fontWeight: '600',
   },
   percentage: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#6200ee',
+    fontWeight: '900',
+    color: COLORS.SECONDARY,
+    textShadowColor: COLORS.TEXT_PRIMARY,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   totalVotes: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '700',
+    color: COLORS.TEXT_PRIMARY,
     textAlign: 'center',
     marginTop: 16,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   thankYouContainer: {
-    backgroundColor: '#e8f5e8',
-    borderRadius: 8,
+    backgroundColor: COLORS.COMIC_HIGHLIGHT,
+    borderRadius: 0,
     padding: 16,
     marginTop: 16,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: COLORS.SUCCESS,
+    transform: [{ skewX: '-3deg' }],
   },
   thankYouText: {
     fontSize: 16,
-    color: '#2e7d32',
-    fontWeight: '600',
+    color: COLORS.SUCCESS,
+    fontWeight: '800',
     marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   pointText: {
     fontSize: 14,
-    color: '#2e7d32',
-    fontWeight: '500',
+    color: COLORS.SUCCESS,
+    fontWeight: '700',
   },
   commentsCard: {
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginVertical: 10,
     marginBottom: 32,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    elevation: 6,
+    shadowColor: COLORS.SHADOW_COMIC,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 0,
+    backgroundColor: COLORS.BACKGROUND_WHITE,
+    borderWidth: 3,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ rotate: '-0.2deg' }],
   },
   commentsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '900',
+    color: COLORS.PRIMARY,
     marginBottom: 16,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    textShadowColor: COLORS.SHADOW,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0,
   },
   commentInput: {
     marginBottom: 16,
@@ -476,21 +552,31 @@ const styles = StyleSheet.create({
   },
   commentSubmitButton: {
     alignSelf: 'flex-end',
-    backgroundColor: '#6200ee',
+    backgroundColor: COLORS.PRIMARY,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
+    borderRadius: 0,
+    transform: [{ skewX: '-3deg' }],
+    shadowColor: COLORS.SHADOW_RED,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
   },
   commentsLoader: {
     marginVertical: 16,
   },
   noCommentsText: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 16,
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
-    fontStyle: 'italic',
+    fontWeight: '600',
     marginVertical: 16,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   commentItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.BORDER_LIGHT,
     paddingVertical: 12,
   },
   commentHeader: {
@@ -499,29 +585,35 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   commentAvatar: {
-    backgroundColor: '#6200ee',
+    backgroundColor: COLORS.SECONDARY,
     marginRight: 12,
+    borderWidth: 2,
+    borderColor: COLORS.TEXT_PRIMARY,
   },
   commentInfo: {
     flex: 1,
   },
   commentAuthor: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '700',
+    color: COLORS.TEXT_PRIMARY,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
   },
   commentDate: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.TEXT_LIGHT,
     marginTop: 2,
+    fontWeight: '600',
   },
   deleteButton: {
     marginLeft: 8,
   },
   commentContent: {
     fontSize: 14,
-    color: '#333',
+    color: COLORS.TEXT_PRIMARY,
     lineHeight: 20,
     marginLeft: 44,
+    fontWeight: '500',
   },
 });

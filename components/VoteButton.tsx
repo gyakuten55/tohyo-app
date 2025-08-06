@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderTopLeftRadius: comicTheme.borderRadius.lg - 4,
-    borderBottomLeftRadius: comicTheme.borderRadius.lg - 4,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
   },
   
   choiceLabel: {

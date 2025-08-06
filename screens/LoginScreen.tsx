@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#6750a4',
+    color: '#004225',
     fontSize: 14,
   },
   signUpContainer: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   signUpLink: {
-    color: '#6750a4',
+    color: '#004225',
     fontWeight: 'bold',
   },
 });
