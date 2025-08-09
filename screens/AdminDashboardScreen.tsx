@@ -23,11 +23,12 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { CategoryManager } from '../components/CategoryManager';
+import { UserManagementScreen } from './UserManagementScreen';
 import { Article, ShortNews } from '../types';
 import { COLORS } from '../constants/colors';
 
 export const AdminDashboardScreen: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'articles' | 'shortnews' | 'categories'>('articles');
+  const [activeTab, setActiveTab] = useState<'articles' | 'shortnews' | 'categories' | 'users'>('articles');
   const [articles, setArticles] = useState<Article[]>([]);
   const [shortNews, setShortNews] = useState<ShortNews[]>([]);
   const [loading, setLoading] = useState(true);
@@ -629,7 +630,7 @@ export const AdminDashboardScreen: React.FC = () => {
       <View style={styles.tabContainer}>
         <SegmentedButtons
           value={activeTab}
-          onValueChange={(value) => setActiveTab(value as 'articles' | 'shortnews' | 'categories')}
+          onValueChange={(value) => setActiveTab(value as 'articles' | 'shortnews' | 'categories' | 'users')}
           buttons={[
             {
               value: 'articles',
@@ -649,6 +650,13 @@ export const AdminDashboardScreen: React.FC = () => {
               value: 'categories',
               label: 'カテゴリ',
               icon: 'folder',
+              style: { borderRadius: 0 },
+              labelStyle: { fontWeight: '700', textTransform: 'uppercase' },
+            },
+            {
+              value: 'users',
+              label: 'ユーザー管理',
+              icon: 'account-group',
               style: { borderRadius: 0 },
               labelStyle: { fontWeight: '700', textTransform: 'uppercase' },
             },
@@ -687,14 +695,16 @@ export const AdminDashboardScreen: React.FC = () => {
             </View>
           }
         />
-      ) : (
+      ) : activeTab === 'categories' ? (
         <CategoryManager onRefresh={() => {
           fetchArticles();
           fetchShortNews();
         }} />
-      )}
+      ) : activeTab === 'users' ? (
+        <UserManagementScreen />
+      ) : null}
 
-      {activeTab !== 'categories' && (
+      {activeTab !== 'categories' && activeTab !== 'users' && (
         <FAB
           style={styles.fab}
           icon="plus"

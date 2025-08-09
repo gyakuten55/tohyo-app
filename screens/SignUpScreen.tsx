@@ -128,7 +128,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               placeholder="パスワード"
               value={password}
               onChangeText={setPassword}
-              secureTextEntry={!showPassword}
+              secureTextEntry={true}
               style={styles.debugInput}
               editable={!loading}
             />
@@ -140,7 +140,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               placeholder="パスワード（確認）"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
-              secureTextEntry={!showConfirmPassword}
+              secureTextEntry={true}
               style={styles.debugInput}
               editable={!loading}
             />
