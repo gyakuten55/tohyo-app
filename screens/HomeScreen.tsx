@@ -8,12 +8,13 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { useArticles } from '../hooks/useArticles';
 import { useCategories } from '../hooks/useCategories';
 import { ArticleCard } from '../components/ArticleCard';
 import { CategoryFilter } from '../components/CategoryFilter';
 import { COLORS, MESSAGES } from '../constants';
-import { Article } from '../types';
+import { Article, Category } from '../types';
 
 interface HomeScreenProps {
   navigation: any;
@@ -29,13 +30,43 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const loading = articlesLoading || categoriesLoading;
 
+  // スワイプでカテゴリ切り替え
+  const handleSwipeGesture = (event: any) => {
+    if (event.nativeEvent.state === State.END) {
+      const { translationX } = event.nativeEvent;
+      const threshold = 50; // スワイプの閾値
+
+      if (Math.abs(translationX) > threshold && categories.length > 0) {
+        // 重複を避けてカテゴリ配列を作成
+        const categoryIds = categories.map(cat => cat.id).filter(id => id !== 'all');
+        const allCategories = ['all', ...categoryIds];
+        const currentIndex = allCategories.indexOf(selectedCategory);
+        
+        console.log('Swipe detected:', { translationX, currentIndex, allCategories, selectedCategory, categories: categories.length });
+
+        if (translationX > 0 && currentIndex > 0) {
+          // 右スワイプ：前のカテゴリ
+          const newCategory = allCategories[currentIndex - 1];
+          console.log('Switching to previous category:', newCategory);
+          setSelectedCategory(newCategory);
+        } else if (translationX < 0 && currentIndex < allCategories.length - 1) {
+          // 左スワイプ：次のカテゴリ
+          const newCategory = allCategories[currentIndex + 1];
+          console.log('Switching to next category:', newCategory);
+          setSelectedCategory(newCategory);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     // カテゴリフィルタリング
     if (selectedCategory === 'all') {
       setFilteredArticles(articles);
     } else {
-      setFilteredArticles(articles.filter(article => article.category_id === selectedCategory));
+      setFilteredArticles(articles.filter(article => (article as any).category_id === selectedCategory));
     }
+    console.log('Category filtering:', { selectedCategory, articlesCount: articles.length, filteredCount: filteredArticles.length });
   }, [selectedCategory, articles]);
 
   const onRefresh = async () => {
@@ -69,7 +100,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <CategoryFilter
           categories={categories}
@@ -77,30 +108,41 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           onSelectCategory={setSelectedCategory}
         />
         
-        {filteredArticles.length === 0 && !loading ? (
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>{MESSAGES.EMPTY_ARTICLES}</Text>
-            <Text style={styles.emptySubText}>{MESSAGES.EMPTY_ARTICLES_SUB}</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredArticles}
-            renderItem={renderArticleCard}
-            keyExtractor={(item) => item.id}
-            refreshControl={
-              <RefreshControl 
-                refreshing={refreshing} 
-                onRefresh={onRefresh}
-                colors={[COLORS.SECONDARY]}
-                tintColor={COLORS.SECONDARY}
+        <PanGestureHandler
+          onHandlerStateChange={handleSwipeGesture}
+          activeOffsetX={[-30, 30]}
+          failOffsetY={[-30, 30]}
+          minPointers={1}
+          maxPointers={1}
+        >
+          <View style={styles.gestureContainer}>
+            {filteredArticles.length === 0 && !loading ? (
+              <View style={styles.centered}>
+                <Text style={styles.emptyText}>{MESSAGES.EMPTY_ARTICLES}</Text>
+                <Text style={styles.emptySubText}>{MESSAGES.EMPTY_ARTICLES_SUB}</Text>
+                <Text style={styles.swipeHint}>← スワイプしてカテゴリを切り替え →</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={filteredArticles}
+                renderItem={renderArticleCard}
+                keyExtractor={(item) => item.id}
+                refreshControl={
+                  <RefreshControl 
+                    refreshing={refreshing} 
+                    onRefresh={onRefresh}
+                    colors={[COLORS.SECONDARY]}
+                    tintColor={COLORS.SECONDARY}
+                  />
+                }
+                contentContainerStyle={styles.listContainer}
+                showsVerticalScrollIndicator={false}
               />
-            }
-            contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+            )}
+          </View>
+        </PanGestureHandler>
       </SafeAreaView>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -150,5 +192,16 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingVertical: 8,
+  },
+  gestureContainer: {
+    flex: 1,
+  },
+  swipeHint: {
+    fontSize: 12,
+    color: COLORS.TEXT_LIGHT,
+    textAlign: 'center',
+    marginTop: 16,
+    fontWeight: '500',
+    fontStyle: 'italic',
   },
 });

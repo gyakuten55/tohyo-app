@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Card, ActivityIndicator } from 'react-native-paper';
+import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { supabase } from '../lib/supabase';
 import { ShortNews, Category } from '../types';
 import { COLORS } from '../constants/colors';
@@ -206,6 +207,27 @@ export const ShortNewsScreen: React.FC = () => {
     setRefreshing(false);
   };
 
+  // スワイプでカテゴリ切り替え
+  const handleSwipeGesture = (event: any) => {
+    if (event.nativeEvent.state === State.END) {
+      const { translationX } = event.nativeEvent;
+      const threshold = 50; // スワイプの閾値
+
+      if (Math.abs(translationX) > threshold) {
+        const allCategories = categories.map(cat => cat.id);
+        const currentIndex = allCategories.indexOf(selectedCategory);
+
+        if (translationX > 0 && currentIndex > 0) {
+          // 右スワイプ：前のカテゴリ
+          setSelectedCategory(allCategories[currentIndex - 1]);
+        } else if (translationX < 0 && currentIndex < allCategories.length - 1) {
+          // 左スワイプ：次のカテゴリ
+          setSelectedCategory(allCategories[currentIndex + 1]);
+        }
+      }
+    }
+  };
+
   const renderNewsItem = ({ item: newsItem }: { item: ShortNews }) => {
     const createdDate = new Date(newsItem.created_at).toLocaleDateString('ja-JP', {
       month: 'short',
@@ -241,7 +263,7 @@ export const ShortNewsScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.categoryContainer}>
           <ScrollView
@@ -273,17 +295,24 @@ export const ShortNewsScreen: React.FC = () => {
           </ScrollView>
         </View>
         
-        {filteredNews.length === 0 && !loading ? (
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>ショートニュースがありません</Text>
-            <Text style={styles.emptySubText}>新しいニュースが投稿されるまでお待ちください</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredNews}
-            renderItem={renderNewsItem}
-            keyExtractor={(item) => item.id}
-            refreshControl={
+        <PanGestureHandler
+          onHandlerStateChange={handleSwipeGesture}
+          activeOffsetX={[-50, 50]}
+          failOffsetY={[-50, 50]}
+        >
+          <View style={styles.gestureContainer}>
+            {filteredNews.length === 0 && !loading ? (
+              <View style={styles.centered}>
+                <Text style={styles.emptyText}>ショートニュースがありません</Text>
+                <Text style={styles.emptySubText}>新しいニュースが投稿されるまでお待ちください</Text>
+                <Text style={styles.swipeHint}>← スワイプしてカテゴリを切り替え →</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={filteredNews}
+                renderItem={renderNewsItem}
+                keyExtractor={(item) => item.id}
+                refreshControl={
               <RefreshControl 
                 refreshing={refreshing} 
                 onRefresh={onRefresh}
@@ -292,11 +321,13 @@ export const ShortNewsScreen: React.FC = () => {
               />
             }
             contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
+          </View>
+        </PanGestureHandler>
       </SafeAreaView>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -394,6 +425,17 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingVertical: 8,
+  },
+  gestureContainer: {
+    flex: 1,
+  },
+  swipeHint: {
+    fontSize: 12,
+    color: COLORS.TEXT_LIGHT,
+    textAlign: 'center',
+    marginTop: 16,
+    fontWeight: '500',
+    fontStyle: 'italic',
   },
   newsCard: {
     marginHorizontal: 16,
