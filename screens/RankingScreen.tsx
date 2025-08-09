@@ -131,21 +131,21 @@ export const RankingScreen: React.FC = () => {
   const getRankColors = (rank: number) => {
     switch (rank) {
       case 1:
-        return ['#FFD700', '#FFA500', '#FF8C00']; // Gold
+        return ['#FFD700', '#FFA500', '#FF8C00'] as const; // Gold
       case 2:
-        return ['#C0C0C0', '#A8A8A8', '#808080']; // Silver
+        return ['#C0C0C0', '#A8A8A8', '#808080'] as const; // Silver
       case 3:
-        return ['#CD7F32', '#B87333', '#A0522D']; // Bronze
+        return ['#CD7F32', '#B87333', '#A0522D'] as const; // Bronze
       default:
-        return ['#1E3A5F', '#2C5282', '#1E3A5F']; // Navy blue
+        return ['#1E3A5F', '#2C5282', '#1E3A5F'] as const; // Navy blue
     }
   };
 
   const getRankBadgeColors = (rank: number) => {
-    if (rank === 1) return ['#FFD700', '#FF6B00'];
-    if (rank === 2) return ['#E5E4E2', '#C0C0C0'];
-    if (rank === 3) return ['#CD7F32', '#8B4513'];
-    return ['#4A5568', '#2D3748'];
+    if (rank === 1) return ['#FFD700', '#FF6B00'] as const;
+    if (rank === 2) return ['#E5E4E2', '#C0C0C0'] as const;
+    if (rank === 3) return ['#CD7F32', '#8B4513'] as const;
+    return ['#4A5568', '#2D3748'] as const;
   };
 
   const renderRankingItem = ({ item: user }: { item: RankingUser }) => {

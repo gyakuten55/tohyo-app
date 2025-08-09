@@ -157,7 +157,7 @@ export const AdminDashboardScreen: React.FC = () => {
     setContent(article.content);
     setChoiceAText(article.choice_a_text);
     setChoiceBText(article.choice_b_text);
-    setStatus(article.status);
+    setStatus(article.status === 'archived' ? 'draft' : article.status);
     setShowEditDialog(true);
   };
 
@@ -707,7 +707,6 @@ export const AdminDashboardScreen: React.FC = () => {
           onPress={() => setShowCreateDialog(true)}
           label={activeTab === 'articles' ? '記事作成' : 'ニュース作成'}
           color={COLORS.TEXT_WHITE}
-          labelStyle={{ color: COLORS.TEXT_WHITE, fontWeight: '700' }}
         />
       )}
 

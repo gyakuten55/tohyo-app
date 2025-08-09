@@ -56,4 +56,6 @@ export const COLORS = {
   COMIC_HIGHLIGHT: '#fff9e6',  // コミックハイライト
   COMIC_ACCENT: '#ffb81c',     // コミックアクセント（ゴールド）
   COMIC_PANEL_BG: '#fffcf8',   // コミックパネル背景
+  COMIC_BOOM: '#ff4444',       // コミックBOOM効果（赤）
+  COMIC_ZAP: '#44ff44',        // コミックZAP効果（緑）
 } as const;

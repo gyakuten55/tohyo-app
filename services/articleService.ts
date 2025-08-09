@@ -56,7 +56,7 @@ export class ArticleService {
     }
   }
 
-  static async fetchUserVotes(userId: string, articleIds: string[]): Promise<Map<string, string>> {
+  static async fetchUserVotes(userId: string, articleIds: string[]): Promise<Map<string, 'a' | 'b'>> {
     try {
       const { data: votes } = await supabase
         .from('votes')
@@ -64,14 +64,14 @@ export class ArticleService {
         .eq('user_id', userId)
         .in('article_id', articleIds);
 
-      return new Map(votes?.map(vote => [vote.article_id, vote.choice]) || []);
+      return new Map(votes?.map(vote => [vote.article_id, vote.choice as 'a' | 'b']) || []);
     } catch (error) {
       console.error('Error fetching user votes:', error);
       return new Map();
     }
   }
 
-  static async fetchUserVoteForArticle(userId: string, articleId: string): Promise<string | null> {
+  static async fetchUserVoteForArticle(userId: string, articleId: string): Promise<'a' | 'b' | null> {
     try {
       const { data: vote } = await supabase
         .from('votes')
@@ -80,7 +80,7 @@ export class ArticleService {
         .eq('article_id', articleId)
         .single();
 
-      return vote?.choice || null;
+      return (vote?.choice as 'a' | 'b') || null;
     } catch (error) {
       console.error('Error fetching user vote:', error);
       return null;

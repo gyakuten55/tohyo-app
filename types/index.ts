@@ -96,7 +96,10 @@ export interface ShortNews {
   category_id?: string;
   status: 'draft' | 'published';
   created_at: string;
-  created_by: string;
+  created_by: {
+    id: string;
+    nickname: string;
+  };
 }
 
 export interface UserReferral {

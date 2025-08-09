@@ -18,7 +18,7 @@ import { useVoting } from '../hooks/useVoting';
 import { VotingCard } from '../components/VotingCard';
 import { CommentList } from '../components/CommentList';
 import { COLORS, MESSAGES } from '../constants';
-import { Article } from '../types';
+import { Article, Comment as CommentType } from '../types';
 
 interface ArticleDetailScreenProps {
   route: any;
@@ -106,8 +106,8 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
     );
   };
 
-  const renderComment = ({ item: comment }: { item: Comment }) => {
-    const canDelete = profile?.role === 'admin' || comment.user.id === user?.id;
+  const renderComment = ({ item: comment }: { item: CommentType }) => {
+    const canDelete = profile?.role === 'admin' || comment.user?.id === user?.id;
     const formatDate = (dateString: string) => {
       const date = new Date(dateString);
       return date.toLocaleDateString('ja-JP', {
@@ -127,7 +127,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
             style={styles.commentAvatar}
           />
           <View style={styles.commentInfo}>
-            <Text style={styles.commentAuthor}>{comment.user.nickname}</Text>
+            <Text style={styles.commentAuthor}>{comment.user?.nickname || '不明'}</Text>
             <Text style={styles.commentDate}>{formatDate(comment.created_at)}</Text>
           </View>
           {canDelete && (

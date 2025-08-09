@@ -116,6 +116,7 @@ export const ShortNewsScreen: React.FC = () => {
               id: '1',
               title: '大谷翔平選手、今季50本塁打達成！',
               summary: 'エンゼルスの大谷翔平選手が今季50本目のホームランを放ち、投打二刀流として驚異的な成績を記録しています。ファンからは「MVP確実」との声も。',
+              status: 'published' as const,
               created_at: new Date().toISOString(),
               created_by: {
                 id: '1',
@@ -126,6 +127,7 @@ export const ShortNewsScreen: React.FC = () => {
               id: '2',
               title: 'WBC2024開催決定、日本代表監督は？',
               summary: '次回のワールド・ベースボール・クラシック開催が正式決定。日本代表の監督人事に注目が集まっており、複数の有力候補が浮上している。',
+              status: 'published' as const,
               created_at: new Date(Date.now() - 86400000).toISOString(),
               created_by: {
                 id: '2',
@@ -136,6 +138,7 @@ export const ShortNewsScreen: React.FC = () => {
               id: '3',
               title: 'メジャーリーグ、日本人選手の活躍続々',
               summary: 'ダルビッシュ有投手の好投、近藤健介選手の適時打など、メジャーで活躍する日本人選手たちのニュースが連日話題となっています。',
+              status: 'published' as const,
               created_at: new Date(Date.now() - 172800000).toISOString(),
               created_by: {
                 id: '3',
@@ -146,6 +149,7 @@ export const ShortNewsScreen: React.FC = () => {
               id: '4',
               title: 'プロ野球オフシーズン、大型トレード予想',
               summary: 'NPBのオフシーズンが本格化し、各球団の補強ポイントが明確に。大型トレードの可能性や注目のFA選手についてまとめました。',
+              status: 'published' as const,
               created_at: new Date(Date.now() - 259200000).toISOString(),
               created_by: {
                 id: '4',

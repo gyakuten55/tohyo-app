@@ -1,8 +1,8 @@
-import { Comment } from '../types';
+import { Comment as CommentType } from '../types';
 import { supabase } from '../lib/supabase';
 
 export class CommentService {
-  static async fetchComments(articleId: string): Promise<{ data: Comment[] | null; error: string | null }> {
+  static async fetchComments(articleId: string): Promise<{ data: CommentType[] | null; error: string | null }> {
     try {
       const { data, error } = await supabase
         .from('comments')
@@ -23,7 +23,19 @@ export class CommentService {
         return { data: null, error: 'コメントの取得に失敗しました' };
       }
 
-      return { data: (data as Comment[]) || [], error: null };
+      // データ構造を変換してComment型に合わせる
+      const formattedData = data?.map(item => ({
+        id: item.id,
+        user_id: item.user?.[0]?.id || '',
+        article_id: articleId,
+        content: item.content,
+        created_at: item.created_at,
+        updated_at: item.created_at, // updated_atがない場合はcreated_atを使用
+        user: Array.isArray(item.user) ? item.user[0] : item.user,
+        parent_id: undefined
+      })) as CommentType[] || [];
+      
+      return { data: formattedData, error: null };
     } catch (error) {
       console.error('Error fetching comments:', error);
       return { data: null, error: 'コメントの取得に失敗しました' };
