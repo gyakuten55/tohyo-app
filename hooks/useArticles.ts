@@ -68,7 +68,7 @@ export const useArticles = (initialLoad: boolean = true) => {
       }
 
       // ユーザーの投票履歴を取得
-      let article = data;
+      const article = data;
       if (user) {
         const userVote = await ArticleService.fetchUserVoteForArticle(user.id, articleId);
         article.user_vote = userVote;

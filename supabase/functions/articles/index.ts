@@ -137,7 +137,7 @@ serve(async (req) => {
     }
 
     // Get user votes for these articles (if authenticated)
-    let userVotes: { [key: string]: string } = {}
+    const userVotes: { [key: string]: string } = {}
     const authHeader = req.headers.get('Authorization')
     if (authHeader && articles && articles.length > 0) {
       const { data: { user } } = await supabase.auth.getUser()

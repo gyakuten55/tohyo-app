@@ -5,15 +5,12 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
-  Dimensions,
 } from 'react-native';
-import { Card, Avatar, Chip } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { mockRankings, isTestEnvironment } from '../data/mockData';
 
-const { width } = Dimensions.get('window');
 
 interface RankingUser {
   id: string;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Card, Chip } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import { Article } from '../types';
 import { COLORS } from '../constants/colors';
 import { formatPercentage } from '../utils/formatters';
@@ -11,8 +11,6 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onPress }) => {
-  const totalVotes = article.choice_a_votes + article.choice_b_votes;
-  const hasVoted = article.user_vote !== null;
 
   return (
     <TouchableOpacity onPress={() => onPress(article)}>

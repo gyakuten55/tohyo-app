@@ -8,7 +8,6 @@ import {
   Alert,
   RefreshControl,
   TouchableOpacity,
-  useWindowDimensions,
 } from 'react-native';
 import { 
   Card, 
@@ -24,7 +23,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { CategoryManager } from '../components/CategoryManager';
-import { Article, ShortNews, Category } from '../types';
+import { Article, ShortNews } from '../types';
 import { COLORS } from '../constants/colors';
 
 export const AdminDashboardScreen: React.FC = () => {
@@ -53,7 +52,6 @@ export const AdminDashboardScreen: React.FC = () => {
   const [newsStatus, setNewsStatus] = useState<'draft' | 'published'>('published');
 
   const { user, profile } = useAuth();
-  const { width } = useWindowDimensions();
 
   const fetchArticles = async () => {
     try {
@@ -180,7 +178,7 @@ export const AdminDashboardScreen: React.FC = () => {
     setCreating(true);
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('articles')
         .insert([
           {
@@ -191,9 +189,7 @@ export const AdminDashboardScreen: React.FC = () => {
             status,
             created_by: user.id,
           },
-        ])
-        .select()
-        .single();
+        ]);
 
       if (error) {
         Alert.alert('エラー', '記事の作成に失敗しました。');
@@ -222,7 +218,7 @@ export const AdminDashboardScreen: React.FC = () => {
     setCreating(true);
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('short_news')
         .insert([
           {
@@ -231,9 +227,7 @@ export const AdminDashboardScreen: React.FC = () => {
             status: newsStatus,
             created_by: user.id,
           },
-        ])
-        .select()
-        .single();
+        ]);
 
       if (error) {
         if (error.code === 'PGRST200' || error.message?.includes('short_news')) {

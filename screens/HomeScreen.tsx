@@ -14,7 +14,7 @@ import { useCategories } from '../hooks/useCategories';
 import { ArticleCard } from '../components/ArticleCard';
 import { CategoryFilter } from '../components/CategoryFilter';
 import { COLORS, MESSAGES } from '../constants';
-import { Article, Category } from '../types';
+import { Article } from '../types';
 
 interface HomeScreenProps {
   navigation: any;

@@ -15,9 +15,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useArticles } from '../hooks/useArticles';
 import { useComments } from '../hooks/useComments';
 import { useVoting } from '../hooks/useVoting';
-import { VotingCard } from '../components/VotingCard';
-import { CommentList } from '../components/CommentList';
-import { COLORS, MESSAGES } from '../constants';
+import { COLORS } from '../constants';
 import { Article, Comment as CommentType } from '../types';
 
 interface ArticleDetailScreenProps {
@@ -44,7 +42,6 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
     fetchComments,
     submitComment,
     deleteComment,
-    canDeleteComment,
   } = useComments(articleId);
 
   const loadArticle = async () => {

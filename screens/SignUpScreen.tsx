@@ -24,8 +24,6 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { signUp } = useAuth();
 
