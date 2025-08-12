@@ -8,6 +8,7 @@ import {
   Alert,
   RefreshControl,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { 
   Card, 
@@ -19,7 +20,9 @@ import {
   Portal,
   RadioButton,
   SegmentedButtons,
+  IconButton,
 } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { CategoryManager } from '../components/CategoryManager';
@@ -46,6 +49,8 @@ export const AdminDashboardScreen: React.FC = () => {
   const [choiceAText, setChoiceAText] = useState('');
   const [choiceBText, setChoiceBText] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [thumbnailUri, setThumbnailUri] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Form state for short news
   const [newsTitle, setNewsTitle] = useState('');
@@ -141,6 +146,7 @@ export const AdminDashboardScreen: React.FC = () => {
     setChoiceAText('');
     setChoiceBText('');
     setStatus('draft');
+    setThumbnailUri(null);
     setEditingArticle(null);
     
     // Reset news form
@@ -157,6 +163,7 @@ export const AdminDashboardScreen: React.FC = () => {
     setChoiceAText(article.choice_a_text);
     setChoiceBText(article.choice_b_text);
     setStatus(article.status === 'archived' ? 'draft' : article.status);
+    setThumbnailUri(article.thumbnail_url || null);
     setShowEditDialog(true);
   };
 
@@ -166,6 +173,84 @@ export const AdminDashboardScreen: React.FC = () => {
     setNewsSummary(news.summary);
     setNewsStatus(news.status);
     setShowEditDialog(true);
+  };
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert('許可が必要です', 'ギャラリーへのアクセス許可が必要です。');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setThumbnailUri(result.assets[0].uri);
+    }
+  };
+
+  const takePicture = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert('許可が必要です', 'カメラへのアクセス許可が必要です。');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setThumbnailUri(result.assets[0].uri);
+    }
+  };
+
+  const uploadThumbnail = async (uri: string): Promise<string | null> => {
+    try {
+      setUploading(true);
+      
+      const fileName = `thumbnail_${Date.now()}.jpg`;
+      const filePath = `thumbnails/${fileName}`;
+      
+      const formData = new FormData();
+      formData.append('file', {
+        uri,
+        type: 'image/jpeg',
+        name: fileName,
+      } as any);
+
+      const { data, error } = await supabase.storage
+        .from('article-images')
+        .upload(filePath, formData, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) {
+        console.error('Upload error:', error);
+        throw error;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('article-images')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Thumbnail upload failed:', error);
+      return null;
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleCreateArticle = async () => {
@@ -179,6 +264,16 @@ export const AdminDashboardScreen: React.FC = () => {
     setCreating(true);
 
     try {
+      let thumbnailUrl = null;
+      
+      // サムネイルがある場合はアップロード
+      if (thumbnailUri) {
+        thumbnailUrl = await uploadThumbnail(thumbnailUri);
+        if (!thumbnailUrl) {
+          Alert.alert('警告', 'サムネイル画像のアップロードに失敗しましたが、記事は作成されます。');
+        }
+      }
+
       const { error } = await supabase
         .from('articles')
         .insert([
@@ -188,6 +283,7 @@ export const AdminDashboardScreen: React.FC = () => {
             choice_a_text: choiceAText.trim(),
             choice_b_text: choiceBText.trim(),
             status,
+            thumbnail_url: thumbnailUrl,
             created_by: user.id,
           },
         ]);
@@ -261,6 +357,18 @@ export const AdminDashboardScreen: React.FC = () => {
     setEditing(true);
 
     try {
+      let thumbnailUrl = editingArticle.thumbnail_url;
+      
+      // サムネイルが変更された場合はアップロード
+      if (thumbnailUri && thumbnailUri !== editingArticle.thumbnail_url) {
+        const newThumbnailUrl = await uploadThumbnail(thumbnailUri);
+        if (newThumbnailUrl) {
+          thumbnailUrl = newThumbnailUrl;
+        } else {
+          Alert.alert('警告', 'サムネイル画像のアップロードに失敗しましたが、記事は更新されます。');
+        }
+      }
+
       const { error } = await supabase
         .from('articles')
         .update({
@@ -269,6 +377,7 @@ export const AdminDashboardScreen: React.FC = () => {
           choice_a_text: choiceAText.trim(),
           choice_b_text: choiceBText.trim(),
           status,
+          thumbnail_url: thumbnailUrl,
           updated_at: new Date().toISOString(),
         })
         .eq('id', editingArticle.id);
@@ -741,11 +850,56 @@ export const AdminDashboardScreen: React.FC = () => {
                     onChangeText={setTitle}
                     mode="outlined"
                     style={styles.input}
-                    disabled={creating || editing}
+                    disabled={creating || editing || uploading}
                     placeholder="投票に関する記事のタイトルを入力"
                     maxLength={100}
                   />
                   <Text style={styles.helperText}>{title.length}/100文字</Text>
+                </View>
+
+                <View style={styles.inputSection}>
+                  <Text style={styles.sectionLabel}>サムネイル画像（任意）</Text>
+                  <View style={styles.thumbnailSection}>
+                    {thumbnailUri ? (
+                      <View style={styles.thumbnailContainer}>
+                        <Image source={{ uri: thumbnailUri }} style={styles.thumbnailImage} />
+                        <IconButton
+                          icon="close"
+                          size={20}
+                          onPress={() => setThumbnailUri(null)}
+                          style={styles.removeThumbnailButton}
+                          disabled={creating || editing || uploading}
+                        />
+                      </View>
+                    ) : (
+                      <View style={styles.noThumbnailContainer}>
+                        <Text style={styles.noThumbnailText}>画像が選択されていません</Text>
+                      </View>
+                    )}
+                    
+                    <View style={styles.thumbnailButtons}>
+                      <Button
+                        mode="outlined"
+                        onPress={pickImage}
+                        disabled={creating || editing || uploading}
+                        style={styles.thumbnailButton}
+                        icon="image"
+                        compact
+                      >
+                        ギャラリーから選択
+                      </Button>
+                      <Button
+                        mode="outlined"
+                        onPress={takePicture}
+                        disabled={creating || editing || uploading}
+                        style={styles.thumbnailButton}
+                        icon="camera"
+                        compact
+                      >
+                        カメラで撮影
+                      </Button>
+                    </View>
+                  </View>
                 </View>
 
                 <View style={styles.inputSection}>
@@ -758,7 +912,7 @@ export const AdminDashboardScreen: React.FC = () => {
                       multiline
                       numberOfLines={8}
                       style={[styles.input, styles.contentInput]}
-                      disabled={creating || editing}
+                      disabled={creating || editing || uploading}
                       placeholder="記事の詳細内容を入力してください"
                       maxLength={1000}
                       contentStyle={styles.contentTextStyle}
@@ -778,7 +932,7 @@ export const AdminDashboardScreen: React.FC = () => {
                         onChangeText={setChoiceAText}
                         mode="outlined"
                         style={styles.choiceInput}
-                        disabled={creating || editing}
+                        disabled={creating || editing || uploading}
                         placeholder="選択肢Aの内容"
                         maxLength={50}
                       />
@@ -786,8 +940,8 @@ export const AdminDashboardScreen: React.FC = () => {
                     </View>
                   </View>
 
-                  <View style={styles.vsContainer}>
-                    <Text style={styles.vsText}>VS</Text>
+                  <View style={styles.dividerContainer}>
+                    <Text style={styles.dividerText}>または</Text>
                   </View>
 
                   <View style={styles.choiceRow}>
@@ -798,7 +952,7 @@ export const AdminDashboardScreen: React.FC = () => {
                         onChangeText={setChoiceBText}
                         mode="outlined"
                         style={styles.choiceInput}
-                        disabled={creating || editing}
+                        disabled={creating || editing || uploading}
                         placeholder="選択肢Bの内容"
                         maxLength={50}
                       />
@@ -816,9 +970,9 @@ export const AdminDashboardScreen: React.FC = () => {
                     <TouchableOpacity 
                       style={[styles.radioCard, status === 'draft' && styles.radioCardSelected]}
                       onPress={() => setStatus('draft')}
-                      disabled={creating || editing}
+                      disabled={creating || editing || uploading}
                     >
-                      <RadioButton value="draft" disabled={creating || editing} />
+                      <RadioButton value="draft" disabled={creating || editing || uploading} />
                       <View style={styles.radioContent}>
                         <Text style={styles.radioTitle}>下書き</Text>
                         <Text style={styles.radioDescription}>後で編集・公開できます</Text>
@@ -828,9 +982,9 @@ export const AdminDashboardScreen: React.FC = () => {
                     <TouchableOpacity 
                       style={[styles.radioCard, status === 'published' && styles.radioCardSelected]}
                       onPress={() => setStatus('published')}
-                      disabled={creating || editing}
+                      disabled={creating || editing || uploading}
                     >
-                      <RadioButton value="published" disabled={creating || editing} />
+                      <RadioButton value="published" disabled={creating || editing || uploading} />
                       <View style={styles.radioContent}>
                         <Text style={styles.radioTitle}>すぐに公開</Text>
                         <Text style={styles.radioDescription}>ユーザーが投票できます</Text>
@@ -847,7 +1001,7 @@ export const AdminDashboardScreen: React.FC = () => {
                   setShowEditDialog(false);
                   resetForm();
                 }}
-                disabled={creating || editing}
+                disabled={creating || editing || uploading}
                 style={styles.cancelButton}
                 mode="outlined"
               >
@@ -855,12 +1009,12 @@ export const AdminDashboardScreen: React.FC = () => {
               </Button>
               <Button 
                 onPress={editingArticle ? handleUpdateArticle : handleCreateArticle}
-                loading={creating || editing}
-                disabled={(creating || editing) || !title.trim() || !content.trim() || !choiceAText.trim() || !choiceBText.trim()}
+                loading={creating || editing || uploading}
+                disabled={(creating || editing || uploading) || !title.trim() || !content.trim() || !choiceAText.trim() || !choiceBText.trim()}
                 mode="contained"
                 style={editingArticle ? styles.updateButton : styles.createButton}
               >
-                {editingArticle ? (editing ? '更新中...' : '記事を更新') : (creating ? '作成中...' : '記事を作成')}
+                {uploading ? 'アップロード中...' : editingArticle ? (editing ? '更新中...' : '記事を更新') : (creating ? '作成中...' : '記事を作成')}
               </Button>
             </Dialog.Actions>
           </Dialog>
@@ -958,7 +1112,7 @@ export const AdminDashboardScreen: React.FC = () => {
                   setShowEditDialog(false);
                   resetForm();
                 }}
-                disabled={creating || editing}
+                disabled={creating || editing || uploading}
                 style={styles.cancelButton}
                 mode="outlined"
               >
@@ -1218,18 +1372,20 @@ const styles = StyleSheet.create({
   choiceInput: {
     marginBottom: 4,
   },
-  vsContainer: {
+  dividerContainer: {
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: 12,
   },
-  vsText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#004225',
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    borderRadius: 0,
+  dividerText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.TEXT_SECONDARY,
+    backgroundColor: COLORS.BACKGROUND,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.BORDER_LIGHT,
   },
   radioCard: {
     flexDirection: 'row',
@@ -1271,5 +1427,51 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     backgroundColor: '#2e7d32',
+  },
+  thumbnailSection: {
+    marginBottom: 16,
+  },
+  thumbnailContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  thumbnailImage: {
+    width: 200,
+    height: 120,
+    borderRadius: 8,
+    backgroundColor: '#f0f0f0',
+  },
+  removeThumbnailButton: {
+    position: 'absolute',
+    top: -10,
+    right: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  },
+  noThumbnailContainer: {
+    width: 200,
+    height: 120,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#ddd',
+    borderStyle: 'dashed',
+    marginBottom: 12,
+  },
+  noThumbnailText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  thumbnailButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    gap: 8,
+  },
+  thumbnailButton: {
+    flex: 1,
+    maxWidth: 160,
   },
 });
